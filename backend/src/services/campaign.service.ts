@@ -29,49 +29,53 @@ export class CampaignService {
       hourlyLimit,
     } = input;
 
-    const emailRecords = recipients.map((recipient, index) => ({
-      id: randomUUID(),
-      recipient,
-      subject,
-      body,
-      status: EmailStatus.SCHEDULED,
-      scheduledAt: new Date(
-        startTime.getTime() +
-          delaySeconds * index * 1000,
-      ),
-    }));
-
-    const campaign = await prisma.$transaction(async (tx) => {
-      const campaign = await this.campaignRepo.create(tx, {
-        userId,
-        senderId,
+    const emailRecords = recipients.map(
+      (recipient, index) => ({
+        id: randomUUID(),
+        recipient,
         subject,
         body,
-        startTime,
-        delaySeconds,
-        hourlyLimit,
-      });
-
-      const emailsForInsert: EmailCreateInput[] =
-        emailRecords.map((email) => ({
-          ...email,
-          campaignId: campaign.id,
-        }));
-
-      await this.emailRepo.createMany(
-        tx,
-        emailsForInsert,
-      );
-
-      return campaign;
-    });
-
-    const emailsWithCampaignId = emailRecords.map(
-      (email) => ({
-        ...email,
-        campaignId: campaign.id,
+        status: EmailStatus.SCHEDULED,
+        scheduledAt: new Date(
+          startTime.getTime() +
+            delaySeconds * index * 1000,
+        ),
       }),
     );
+
+    const campaign = await prisma.$transaction(
+      async (tx) => {
+        const campaign =
+          await this.campaignRepo.create(tx, {
+            userId,
+            senderId,
+            subject,
+            body,
+            startTime,
+            delaySeconds,
+            hourlyLimit,
+          });
+
+        const emailsForInsert: EmailCreateInput[] =
+          emailRecords.map((email) => ({
+            ...email,
+            campaignId: campaign.id,
+          }));
+
+        await this.emailRepo.createMany(
+          tx,
+          emailsForInsert,
+        );
+
+        return campaign;
+      },
+    );
+
+    const emailsWithCampaignId =
+      emailRecords.map((email) => ({
+        ...email,
+        campaignId: campaign.id,
+      }));
 
     await emailQueue.addBulk(
       emailsWithCampaignId.map((email) => ({
@@ -83,7 +87,8 @@ export class CampaignService {
           jobId: email.id,
           delay: Math.max(
             0,
-            email.scheduledAt.getTime() - Date.now(),
+            email.scheduledAt.getTime() -
+              Date.now(),
           ),
         },
       })),
@@ -91,12 +96,27 @@ export class CampaignService {
 
     return {
       campaign,
-      emails: emailsWithCampaignId.map((email) => ({
-        id: email.id,
-        recipient: email.recipient,
-        status: email.status,
-        scheduledAt: email.scheduledAt,
-      })),
+      emails: emailsWithCampaignId.map(
+        (email) => ({
+          id: email.id,
+          recipient: email.recipient,
+          status: email.status,
+          scheduledAt: email.scheduledAt,
+        }),
+      ),
     };
   }
+
+  async getEmailsByStatus(
+    userId: string,
+    status: EmailStatus,
+  ) {
+    return this.emailRepo.findByStatus(
+      prisma,
+      userId,
+      status,
+    );
+  }
+
+  
 }

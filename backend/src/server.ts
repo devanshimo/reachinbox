@@ -1,18 +1,29 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { emailQueue } from "./queue/email.queue";
-import campaignRouter  from "./routes/campaign.routes";
-import { prisma } from "./lib/prisma";
-dotenv.config();
+import cookieParser from "cookie-parser";
 
+import authRouter from "./routes/auth.routes";
+import campaignRouter from "./routes/campaign.routes";
+import { prisma } from "./lib/prisma";
+import { emailQueue } from "./queue/email.queue";
+
+dotenv.config();
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
+
+app.use(cookieParser());
 app.use(express.json());
 
-
+app.use("/auth", authRouter);
+app.use("/api", campaignRouter);
 
 app.get("/health", async (_req, res) => {
   try {
@@ -24,7 +35,10 @@ app.get("/health", async (_req, res) => {
       database: "connected",
     });
   } catch (error) {
-    console.error("Database health check failed:", error);
+    console.error(
+      "Database health check failed:",
+      error,
+    );
 
     res.status(503).json({
       status: "error",
@@ -33,7 +47,7 @@ app.get("/health", async (_req, res) => {
     });
   }
 });
-const PORT = process.env.PORT || 3000;
+
 app.post("/test-queue", async (_req, res) => {
   const job = await emailQueue.add(
     "test-email",
@@ -43,7 +57,7 @@ app.post("/test-queue", async (_req, res) => {
     {
       delay: 5000,
       removeOnComplete: true,
-    }
+    },
   );
 
   res.json({
@@ -51,7 +65,7 @@ app.post("/test-queue", async (_req, res) => {
     jobId: job.id,
   });
 });
-app.use("/api", campaignRouter);
+
 app.use(
   (
     error: unknown,
@@ -67,8 +81,10 @@ app.use(
   },
 );
 
-
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(
+    `Server running on http://localhost:${PORT}`,
+  );
 });
