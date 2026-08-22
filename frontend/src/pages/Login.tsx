@@ -14,7 +14,7 @@ function Login() {
 
   const handleGoogleLogin = () => {
     window.location.href =
-      "http://localhost:3000/auth/google";
+      "https://reachinbox-assignment-production-a5db.up.railway.app/auth/google";
   };
 
   return (

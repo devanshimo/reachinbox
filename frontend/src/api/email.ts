@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/api";
+const API_URL = "https://reachinbox-assignment-production-a5db.up.railway.app/api";
 
 export interface Email {
   id: string;

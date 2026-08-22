@@ -626,7 +626,7 @@ For a production deployment:
 | Email status tracking | Implemented |
 | Loading states | Implemented |
 | Empty states | Implemented |
-| Docker support | In progress |
+| Docker support | Implemented |
 | README/documentation | Implemented |
 
 ---

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const authApi = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "https://reachinbox-assignment-production-a5db.up.railway.app",
   withCredentials: true,
 });
 

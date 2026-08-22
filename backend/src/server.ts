@@ -14,7 +14,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://reachinbox-assignment-production-f2f3.up.railway.app",
     credentials: true,
   }),
 );

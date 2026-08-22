@@ -60,6 +60,9 @@ function Sent() {
                 <strong>{email.subject}</strong>
                 <span> - {email.body}</span>
               </div>
+              <div className="email-status">
+                {email.status.toLowerCase()}
+              </div>
 
               <div className="email-star">
                 ☆
