@@ -595,42 +595,6 @@ For a production deployment:
 
 ---
 
-# Assignment Requirements
-
-| Requirement | Status |
-|---|---|
-| Express + TypeScript | Implemented |
-| PostgreSQL | Implemented |
-| BullMQ + Redis | Implemented |
-| Persistent delayed scheduling | Implemented |
-| No cron-based scheduler | Implemented |
-| Ethereal SMTP | Implemented |
-| Worker concurrency | Implemented |
-| Minimum per-email delay | Implemented |
-| Redis-backed hourly rate limiting | Implemented |
-| Redis-backed send throttling | Implemented |
-| Atomic shared rate-limit state | Implemented |
-| Sender data model | Implemented |
-| Job idempotency | Implemented |
-| Google OAuth | Implemented |
-| HTTP-only authentication | Implemented |
-| Authenticated dashboard | Implemented |
-| Compose email | Implemented |
-| CSV/TXT recipient upload | Implemented |
-| Recipient count | Implemented |
-| Start time scheduling | Implemented |
-| Configurable delay | Implemented |
-| Configurable hourly limit | Implemented |
-| Scheduled email list | Implemented |
-| Sent email list | Implemented |
-| Email status tracking | Implemented |
-| Loading states | Implemented |
-| Empty states | Implemented |
-| Docker support | Implemented |
-| README/documentation | Implemented |
-
----
-
 # Demo Flow
 
 The recommended demonstration flow is:
