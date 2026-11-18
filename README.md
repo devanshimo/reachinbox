@@ -1,6 +1,6 @@
 # ReachInbox – Full-Stack Email Job Scheduler
 
-A full-stack email scheduling system built for the ReachInbox Software Development Intern assignment.
+A full-stack email scheduling system.
 
 The application provides a React dashboard for composing and scheduling email campaigns, backed by an Express/TypeScript API, PostgreSQL, Redis, BullMQ, and Ethereal SMTP.
 
